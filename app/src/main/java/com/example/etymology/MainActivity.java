@@ -2,6 +2,7 @@ package com.example.etymology;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,26 +14,27 @@ public class MainActivity extends AppCompatActivity {
     private EditText enterWord ;
     private TextView wordOrigin;
     private Button button;
-    String word, url;
+    String  url;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        url = dictionaryEntries();
+
         button = (Button) findViewById(R.id.button);
+       // button2=(Button)findViewById(R.id.button2);
         enterWord = (EditText) findViewById(R.id.enterWord);
 
         wordOrigin = (TextView) findViewById(R.id.wordOrigin);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (enterWord.getText().toString().equals("")) {
-                    enterWord.setError("Please enter the word");
-                } else {
-                    word = enterWord.getText().toString();
-                    requestApiButtonClick();
-                }
+                if (enterWord.getText().toString().equals(""))
+                enterWord.setError("Please enter the word");
+                 else
+                     requestApiButtonClick();
+
             }
         });
 
@@ -40,18 +42,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void requestApiButtonClick() {
-        Request Request = new Request();
+        url=dictionaryEntries();
+        Request Request = new Request(this,wordOrigin);
         Request.execute(url);
     }
 
     private String dictionaryEntries() {
         final String language = "en-gb";
-        final String word = "Ace";
+        final String word =enterWord.getText().toString(); ;
         final String fields = "etymologies";
         final String strictMatch = "false";
         final String word_id = word.toLowerCase();
-        return "https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/ace?fields=etymologies&strictMatch=false" + language + "/" + word_id + "?" + "fields=" + fields + "&strictMatch=" + strictMatch;
-
+        return "https://od-api.oxforddictionaries.com:443/api/v2/entries/" + language + "/" + word_id + "?" + "fields=" + fields + "&strictMatch=" + strictMatch;
     }
 }
 

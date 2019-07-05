@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.constraint.ConstraintLayout;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,8 +22,8 @@ public class Request extends AsyncTask<String,Integer,String>
     final String app_id = "dcbe5d78";
     final String app_key = "81b2c239ccd988a9be74b86f8a8291b0";
    Context context;
- EditText wordOrigin;
-  public Request()
+   TextView wordOrigin;
+  public Request(Context context,TextView wordOrigin)
     { this.context=context;
         this.wordOrigin=wordOrigin;
 
@@ -66,19 +67,24 @@ public class Request extends AsyncTask<String,Integer,String>
     {
         super.onPostExecute(task);
         try
-        {
+        {//results
             JSONObject object=new JSONObject(task);
             JSONArray results=object.getJSONArray("results");
 
-            JSONObject lEntries=results.getJSONObject(0);
-            JSONArray laArray=lEntries.getJSONArray("lexicalEntries");
+            //lexicalEntries
+             JSONObject lEntries=results.getJSONObject(0);
+             JSONArray array=lEntries.getJSONArray("lexicalEntries");
 
-        JSONObject entries =laArray.getJSONObject(0);
+             //entries
+            JSONObject entries =array.getJSONObject(0);
         JSONArray e=entries.getJSONArray("entries");
 
+        //etymologies
         JSONObject jsonObject=e.getJSONObject(0);
         JSONArray etymologyArray=jsonObject.getJSONArray("etymologies");
+
         String etymologies=etymologyArray.getString(0);
+         wordOrigin.setText(etymologies);
 
 
         }
