@@ -1,0 +1,57 @@
+package com.example.etymology;
+
+import android.content.Context;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+public class MainActivity extends AppCompatActivity {
+    private EditText enterWord ;
+    private TextView wordOrigin;
+    private Button button;
+    String word, url;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        url = dictionaryEntries();
+        button = (Button) findViewById(R.id.button);
+        enterWord = (EditText) findViewById(R.id.enterWord);
+
+        wordOrigin = (TextView) findViewById(R.id.wordOrigin);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (enterWord.getText().toString().equals("")) {
+                    enterWord.setError("Please enter the word");
+                } else {
+                    word = enterWord.getText().toString();
+                    requestApiButtonClick();
+                }
+            }
+        });
+
+
+    }
+
+    public void requestApiButtonClick() {
+        Request Request = new Request();
+        Request.execute(url);
+    }
+
+    private String dictionaryEntries() {
+        final String language = "en-gb";
+        final String word = "Ace";
+        final String fields = "etymologies";
+        final String strictMatch = "false";
+        final String word_id = word.toLowerCase();
+        return "https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/ace?fields=etymologies&strictMatch=false" + language + "/" + word_id + "?" + "fields=" + fields + "&strictMatch=" + strictMatch;
+
+    }
+}
+
