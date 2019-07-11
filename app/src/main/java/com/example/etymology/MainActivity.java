@@ -9,13 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private EditText enterWord ;
     private TextView wordOrigin;
-    private Button button;
-    String  url;
-
+    private Button button,button2;
+    String  url,enteredWord;
+   DataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,23 +24,36 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         button = (Button) findViewById(R.id.button);
-       // button2=(Button)findViewById(R.id.button2);
+        button2=(Button)findViewById(R.id.button2);
         enterWord = (EditText) findViewById(R.id.enterWord);
-
         wordOrigin = (TextView) findViewById(R.id.wordOrigin);
+        db=new DataBase(this);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (enterWord.getText().toString().equals(""))
                 enterWord.setError("Please enter the word");
                  else
-                     requestApiButtonClick();
+                {
+                    requestApiButtonClick();
+                 enteredWord=enterWord.getText().toString();
+                 //inserting data
+                    db.InsertData(enteredWord);
+
+                }
 
             }
         });
-
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainActivity.this,History.class);
+                startActivity(intent);
+            }
+        });
 
     }
+
 
     public void requestApiButtonClick() {
         url=dictionaryEntries();
